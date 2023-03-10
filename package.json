@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://suchmolin.github.io/TIMAS",
+  "homepage": "http://suchmolin.github.io/TIMAS/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
