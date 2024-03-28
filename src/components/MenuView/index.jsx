@@ -1,7 +1,9 @@
 import React from "react";
 import { Grid, Box, Typography, Button } from "@mui/material";
+import { useAuth } from "../../context/AuthContext";
 
 const MenuView = (props) => {
+  const { user } = useAuth();
   const imgBoton = [
     {
       titulo: "Presupuesto",
@@ -60,7 +62,7 @@ const MenuView = (props) => {
           textAlign: "center",
         }}
       >
-        Bienvenido Suchmolin11
+        Bienvenido {user?.email}
       </Typography>
       <Grid container spacing={2} sx={{ padding: "30px" }}>
         {imgBoton.map((item) => (

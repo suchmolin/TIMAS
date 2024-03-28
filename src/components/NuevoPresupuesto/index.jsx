@@ -4,6 +4,15 @@ import DatosPresupuesto from "../DatosPresupuesto";
 import ItemsPresupuesto from "../ItemsPresupuesto";
 import { jsPDF } from "jspdf";
 import htmlPDF from "./pdf.js";
+import appFirebase from "../../firebase/firebase.config.js";
+import {
+  query,
+  getFirestore,
+  collection,
+  getDocs,
+  where,
+} from "firebase/firestore";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 const NuevoPresupuesto = (props) => {
   const today = new Date();
@@ -18,10 +27,10 @@ const NuevoPresupuesto = (props) => {
     cliente: "",
     rifCliente: "",
     titulo: "",
-    representante: "Romel Suchmolin",
-    rifRep: "J-50356792-9",
-    correo: "youseven.adm@gmail.com",
-    telefono: "04242185712",
+    representante: "",
+    rifRep: "",
+    correo: "",
+    telefono: "",
   });
   const [handlerExtra, setHandlerExtra] = useState({
     iva: 12,
@@ -36,10 +45,36 @@ const NuevoPresupuesto = (props) => {
   const [errorInput, setErrorInput] = useState(false);
   const [itemsTable, setItemsTable] = useState([]);
   const [total, setTotal] = useState(0);
+  const [datosRep, setDatosRep] = useState({});
+  const { user } = useAuth();
+  const userId = user.uid;
 
   useEffect(() => {
     setItemsTable([]);
+    getRepData();
   }, []);
+
+  useEffect(() => {
+    setHandlerForm((prevState) => ({
+      ...prevState,
+      representante: datosRep.name,
+      rifRep: datosRep.rif,
+      correo: datosRep.email,
+      telefono: datosRep.cellphone,
+    }));
+  }, [datosRep]);
+
+  const getRepData = () => {
+    const db = getFirestore(appFirebase);
+    const q = query(collection(db, "datosRep"), where("user", "==", userId));
+    getDocs(q)
+      .then((response) => {
+        response.forEach((item) => {
+          setDatosRep(item.data());
+        });
+      })
+      .catch((error) => console.log(error));
+  };
 
   const checkFoward = () => {
     setErrorInput(false);

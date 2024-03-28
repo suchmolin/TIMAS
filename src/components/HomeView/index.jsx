@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container } from "@mui/system";
 import { Grid, Paper, Box, Typography, Button } from "@mui/material";
 import MenuView from "../MenuView";
 import DecoMenu from "../DecoMenu";
 import NuevoPresupuesto from "../NuevoPresupuesto";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const HomeView = () => {
-  let [menuViewState, setMenuViewState] = React.useState("menu");
+  const navigateTo = useNavigate();
+  const { user } = useAuth();
+  useEffect(() => {
+    if (!user) {
+      navigateTo("/");
+    }
+  }, []);
+  const [menuViewState, setMenuViewState] = React.useState("menu");
   const regresarMenu = () => {
     setMenuViewState("menu");
   };
